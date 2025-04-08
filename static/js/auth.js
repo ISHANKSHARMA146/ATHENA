@@ -120,4 +120,18 @@ async function resetPassword() {
         resetBtn.disabled = false;
         resetBtn.textContent = 'Send Reset Link';
     }
+}
+
+// Toggle password visibility
+function togglePasswordVisibility(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const eyeIcon = event.currentTarget.querySelector('.eye-icon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.textContent = '👁️‍🗨️'; // Closed eye
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.textContent = '👁️'; // Open eye
+    }
 } 
