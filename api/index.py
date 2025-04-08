@@ -1,6 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 import os
+import pathlib
 
 app = FastAPI()
 
@@ -12,6 +14,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Get base directory (for resolving templates)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 
 @app.get("/api/health")
 async def health_check():
@@ -47,9 +53,29 @@ async def get_firebase_config():
         "measurementId": os.environ.get("FIREBASE_MEASUREMENT_ID", "")
     }
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    return {"message": "Welcome to Athena API"}
+    """Serve the main index.html file"""
+    try:
+        with open(os.path.join(TEMPLATES_DIR, "index.html"), "r") as f:
+            content = f.read()
+        return HTMLResponse(content=content)
+    except Exception as e:
+        return {"error": f"Failed to load index.html: {str(e)}"}
+
+@app.get("/templates/{path:path}")
+async def serve_template(path: str):
+    """Serve template files directly"""
+    file_path = os.path.join(TEMPLATES_DIR, path)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return FileResponse(file_path)
+    return {"error": "Template not found"}
+
+@app.get("/components/{component_type}/{file_name}")
+async def get_component(component_type: str, file_name: str):
+    """Serve component templates for backward compatibility"""
+    file_path = os.path.join(TEMPLATES_DIR, component_type, file_name)
+    return serve_template(f"{component_type}/{file_name}")
 
 # Import routes at the bottom to avoid circular imports
 from routes import auth, company, jd
