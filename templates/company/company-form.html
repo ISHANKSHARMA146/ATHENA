@@ -2,12 +2,24 @@
 <div class="compact-toggle">
     <label>
         <input type="checkbox" id="company-compact-toggle" onchange="toggleCompactForm('company-form')">
-        Show only required fields
+        Show only essential fields
     </label>
 </div>
 
 <div class="form-progress">
     <div class="progress-bar" id="company-form-progress"></div>
+    <div class="progress-label">Form completion: <span id="company-progress-percent">0%</span></div>
+</div>
+
+<div class="form-tips">
+    <div class="tip">
+        <span class="tip-icon">💡</span>
+        <span class="tip-text">Start with the essential information, you can always come back to add more details later.</span>
+    </div>
+    <div class="tip">
+        <span class="tip-icon">✨</span>
+        <span class="tip-text">Use checkboxes above each section to show/hide specific fields you need.</span>
+    </div>
 </div>
 
 <form id="company-form">
@@ -17,12 +29,28 @@
         <div class="form-group">
             <label for="company-name" class="required-label">Company Name:</label>
             <input type="text" id="company-name" name="name" placeholder="Enter company name" required>
+            <div class="field-hint">This will be displayed on all job postings.</div>
         </div>
     </div>
     
     <!-- Company Identity -->
     <div class="form-section">
         <h2>Company Identity</h2>
+        <div class="section-description">Add information that helps candidates understand who you are as a company.</div>
+        
+        <div class="essential-fields">
+            <div class="form-group optional-field" id="company-overview-group">
+                <label for="company-overview">Overview:</label>
+                <textarea id="company-overview" name="overview" placeholder="Brief company overview (e.g., 'A leading software company focused on AI solutions')"></textarea>
+                <div class="field-hint">A concise description of what your company does.</div>
+            </div>
+            <div class="form-group optional-field" id="company-industry-group">
+                <label for="company-industry">Industry:</label>
+                <input type="text" id="company-industry" name="industry" placeholder="E.g., Technology, Healthcare, Finance">
+                <div class="field-hint">Your primary business sector.</div>
+            </div>
+        </div>
+        
         <div class="field-checkboxes">
             <label class="field-checkbox">
                 <input type="checkbox" checked onchange="toggleField('company-overview')">
@@ -41,19 +69,19 @@
                 Headquarters
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('company-global-presence')">
+                <input type="checkbox" onchange="toggleField('company-global-presence')">
                 Global Presence
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('company-size')">
+                <input type="checkbox" onchange="toggleField('company-size')">
                 Company Size
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('company-ownership')">
+                <input type="checkbox" onchange="toggleField('company-ownership')">
                 Ownership Type
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('company-type')">
+                <input type="checkbox" onchange="toggleField('company-type')">
                 Company Type
             </label>
             <label class="field-checkbox">
@@ -61,66 +89,59 @@
                 Products/Services
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('company-specialties')">
+                <input type="checkbox" onchange="toggleField('company-specialties')">
                 Specialties
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('company-growth')">
+                <input type="checkbox" onchange="toggleField('company-growth')">
                 Growth Stage
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('company-markets')">
+                <input type="checkbox" onchange="toggleField('company-markets')">
                 Key Markets
             </label>
         </div>
         
-        <div class="form-group optional-field" id="company-overview-group">
-            <label for="company-overview">Overview:</label>
-            <textarea id="company-overview" name="overview" placeholder="Brief company overview"></textarea>
-        </div>
-        <div class="form-group optional-field" id="company-industry-group">
-            <label for="company-industry">Industry:</label>
-            <input type="text" id="company-industry" name="industry" placeholder="Company industry">
-        </div>
         <div class="form-group optional-field" id="company-year-founded-group">
             <label for="company-year-founded">Year Founded:</label>
-            <input type="number" id="company-year-founded" name="year_founded" placeholder="Year company was founded">
+            <input type="number" id="company-year-founded" name="year_founded" placeholder="E.g., 2010">
         </div>
         <div class="form-group optional-field" id="company-headquarters-group">
             <label for="company-headquarters">Headquarters Location:</label>
-            <input type="text" id="company-headquarters" name="headquarters_location" placeholder="Company headquarters">
+            <input type="text" id="company-headquarters" name="headquarters_location" placeholder="E.g., San Francisco, CA">
         </div>
         <div class="form-group optional-field" id="company-global-presence-group">
             <label for="company-global-presence">Global Presence:</label>
-            <textarea id="company-global-presence" name="global_presence" placeholder="Countries/regions of operation"></textarea>
+            <textarea id="company-global-presence" name="global_presence" placeholder="E.g., Offices in US, Europe, and Asia"></textarea>
         </div>
         <div class="form-group optional-field" id="company-size-group">
             <label for="company-size">Company Size:</label>
-            <input type="text" id="company-size" name="company_size" placeholder="Number of employees">
+            <input type="text" id="company-size" name="company_size" placeholder="E.g., 50-100 employees">
         </div>
         <div class="form-group optional-field" id="company-ownership-group">
             <label for="company-ownership">Ownership Type:</label>
-            <input type="text" id="company-ownership" name="ownership_type" placeholder="Public, private, etc.">
+            <input type="text" id="company-ownership" name="ownership_type" placeholder="E.g., Private, Public, Startup">
         </div>
         <div class="form-group optional-field" id="company-type-group">
             <label for="company-type">Company Type:</label>
-            <input type="text" id="company-type" name="company_type" placeholder="Startup, enterprise, etc.">
+            <input type="text" id="company-type" name="company_type" placeholder="E.g., SaaS, B2B, FinTech">
         </div>
         <div class="form-group optional-field" id="company-products-group">
             <label for="company-products">Products/Services:</label>
-            <textarea id="company-products" name="products_services" placeholder="Main products and services"></textarea>
+            <textarea id="company-products" name="products_services" placeholder="E.g., Cloud software, consulting services"></textarea>
+            <div class="field-hint">The main products and services your company offers.</div>
         </div>
         <div class="form-group optional-field" id="company-specialties-group">
             <label for="company-specialties">Specialties:</label>
-            <textarea id="company-specialties" name="specialties" placeholder="Company specialties"></textarea>
+            <textarea id="company-specialties" name="specialties" placeholder="E.g., AI, machine learning, data analysis"></textarea>
         </div>
         <div class="form-group optional-field" id="company-growth-group">
             <label for="company-growth">Growth Stage:</label>
-            <input type="text" id="company-growth" name="growth_stage" placeholder="Seed, Series A, etc.">
+            <input type="text" id="company-growth" name="growth_stage" placeholder="E.g., Startup, Series A, Enterprise">
         </div>
         <div class="form-group optional-field" id="company-markets-group">
             <label for="company-markets">Key Markets:</label>
-            <textarea id="company-markets" name="key_markets" placeholder="Primary market segments"></textarea>
+            <textarea id="company-markets" name="key_markets" placeholder="E.g., Healthcare, Finance, Education"></textarea>
         </div>
     </div>
     
@@ -364,6 +385,7 @@ function toggleCompactForm(formId) {
 function updateFormProgress(formId) {
     const form = document.getElementById(formId);
     const progressBar = document.getElementById(formId + '-progress');
+    const progressPercent = document.getElementById(formId + '-progress-percent');
     
     if (form && progressBar) {
         const totalFields = form.querySelectorAll('.form-group').length;
@@ -371,6 +393,9 @@ function updateFormProgress(formId) {
         
         const progress = Math.round((filledFields / totalFields) * 100);
         progressBar.style.width = progress + '%';
+        if (progressPercent) {
+            progressPercent.innerText = progress + '%';
+        }
     }
 }
 

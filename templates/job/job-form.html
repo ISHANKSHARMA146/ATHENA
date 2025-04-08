@@ -2,12 +2,24 @@
 <div class="compact-toggle">
     <label>
         <input type="checkbox" id="job-compact-toggle" onchange="toggleCompactForm('job-form')">
-        Show only required fields
+        Show only essential fields
     </label>
 </div>
 
 <div class="form-progress">
     <div class="progress-bar" id="job-form-progress"></div>
+    <div class="progress-label">Form completion: <span id="job-progress-percent">0%</span></div>
+</div>
+
+<div class="form-tips">
+    <div class="tip">
+        <span class="tip-icon">💡</span>
+        <span class="tip-text">Focus on what makes this role unique to attract the right candidates.</span>
+    </div>
+    <div class="tip">
+        <span class="tip-icon">✓</span>
+        <span class="tip-text">Start with job title, summary, and requirements - you can add more details later.</span>
+    </div>
 </div>
 
 <form id="job-form">
@@ -20,16 +32,44 @@
         <div class="form-group">
             <label for="job-title" class="required-label">Job Title:</label>
             <input type="text" id="job-title" name="title" placeholder="Enter job title" required>
+            <div class="field-hint">Use a clear, specific title that candidates would search for.</div>
         </div>
         <div class="form-group">
             <label for="job-code">Job Code:</label>
-            <input type="text" id="job-code" name="job_code" placeholder="Enter job code">
+            <input type="text" id="job-code" name="job_code" placeholder="Internal reference code (optional)">
+            <div class="field-hint">For your internal tracking purposes.</div>
+        </div>
+    </div>
+
+    <!-- Job Summary Section - Essential Fields -->
+    <div class="form-section">
+        <h2>Key Job Details</h2>
+        <div class="section-description">These are the essential details candidates look for first.</div>
+        
+        <div class="essential-fields">
+            <div class="form-group optional-field" id="job-summary-group">
+                <label for="job-summary">Job Summary:</label>
+                <textarea id="job-summary" name="job_summary" placeholder="Brief overview of the role and its purpose"></textarea>
+                <div class="field-hint">A concise summary that covers what the role does and its importance.</div>
+            </div>
+            
+            <div class="form-group optional-field" id="work-model-group">
+                <label for="work-model">Work Model:</label>
+                <input type="text" id="work-model" name="work_model" placeholder="E.g., Remote, Hybrid (3 days in office), On-site">
+                <div class="field-hint">One of the first things candidates want to know.</div>
+            </div>
+            
+            <div class="form-group optional-field" id="job-level-group">
+                <label for="job-level">Job Level:</label>
+                <input type="text" id="job-level" name="job_level" placeholder="E.g., Entry, Mid, Senior, Lead">
+                <div class="field-hint">Helps candidates understand if this role matches their experience level.</div>
+            </div>
         </div>
     </div>
 
     <!-- Basic Job Information -->
     <div class="form-section">
-        <h2>Job Details</h2>
+        <h2>Job Classification</h2>
         <div class="field-checkboxes">
             <label class="field-checkbox">
                 <input type="checkbox" checked onchange="toggleField('job-level')">
@@ -45,23 +85,19 @@
             </label>
         </div>
         
-        <div class="form-group optional-field" id="job-level-group">
-            <label for="job-level">Job Level:</label>
-            <input type="text" id="job-level" name="job_level" placeholder="Entry, Mid, Senior, etc.">
-        </div>
         <div class="form-group optional-field" id="job-department-group">
             <label for="job-department">Department:</label>
-            <input type="text" id="job-department" name="department" placeholder="Marketing, Engineering, etc.">
+            <input type="text" id="job-department" name="department" placeholder="E.g., Marketing, Engineering, Sales">
         </div>
         <div class="form-group optional-field" id="job-function-group">
             <label for="job-function">Job Function:</label>
-            <input type="text" id="job-function" name="job_function" placeholder="Software Development, Design, etc.">
+            <input type="text" id="job-function" name="job_function" placeholder="E.g., Software Development, UX/UI Design">
         </div>
     </div>
     
     <!-- Job Posting Metadata -->
     <div class="form-section">
-        <h2>Job Posting Metadata</h2>
+        <h2>Employment Details</h2>
         <div class="field-checkboxes">
             <label class="field-checkbox">
                 <input type="checkbox" checked onchange="toggleField('contract-duration')">
@@ -75,11 +111,11 @@
         
         <div class="form-group optional-field" id="contract-duration-group">
             <label for="contract-duration">Contract Duration:</label>
-            <input type="text" id="contract-duration" name="contract_duration" placeholder="Permanent, 6 months, etc.">
+            <input type="text" id="contract-duration" name="contract_duration" placeholder="E.g., Permanent, 6 months, 1 year">
         </div>
         <div class="form-group optional-field" id="time-commitment-group">
             <label for="time-commitment">Time Commitment:</label>
-            <input type="text" id="time-commitment" name="time_commitment" placeholder="Full-time, Part-time, etc.">
+            <input type="text" id="time-commitment" name="time_commitment" placeholder="E.g., Full-time, Part-time (20 hrs/week)">
         </div>
     </div>
     
@@ -96,34 +132,31 @@
                 Day-to-Day Tasks
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('performance')">
+                <input type="checkbox" onchange="toggleField('performance')">
                 Performance Indicators
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('decision-making')">
+                <input type="checkbox" onchange="toggleField('decision-making')">
                 Decision Making
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('stakeholders')">
+                <input type="checkbox" onchange="toggleField('stakeholders')">
                 Stakeholder Interactions
             </label>
         </div>
         
-        <div class="form-group optional-field" id="job-summary-group">
-            <label for="job-summary">Job Summary:</label>
-            <textarea id="job-summary" name="job_summary" placeholder="Brief overview of the job"></textarea>
-        </div>
         <div class="form-group optional-field" id="day-to-day-group">
             <label for="day-to-day">Day-to-Day Tasks:</label>
-            <textarea id="day-to-day" name="day_to_day_tasks" placeholder="Regular responsibilities and tasks"></textarea>
+            <textarea id="day-to-day" name="day_to_day_tasks" placeholder="List the main responsibilities and regular tasks"></textarea>
+            <div class="field-hint">Describe what the person in this role will actually do day-to-day.</div>
         </div>
         <div class="form-group optional-field" id="performance-group">
             <label for="performance">Performance Indicators:</label>
-            <textarea id="performance" name="performance_indicators" placeholder="How success will be measured"></textarea>
+            <textarea id="performance" name="performance_indicators" placeholder="How success will be measured in this role"></textarea>
         </div>
         <div class="form-group optional-field" id="decision-making-group">
             <label for="decision-making">Decision-Making Responsibilities:</label>
-            <textarea id="decision-making" name="decision_making" placeholder="Decision authorities and scope"></textarea>
+            <textarea id="decision-making" name="decision_making" placeholder="What decisions this role will be responsible for"></textarea>
         </div>
         <div class="form-group optional-field" id="stakeholders-group">
             <label for="stakeholders">Stakeholder Interactions:</label>
@@ -131,9 +164,17 @@
         </div>
     </div>
     
-    <!-- Requirements -->
+    <!-- Requirements - Essential Fields -->
     <div class="form-section">
         <h2>Requirements</h2>
+        <div class="essential-fields">
+            <div class="form-group optional-field" id="required-qualifications-group">
+                <label for="required-qualifications">Required Qualifications:</label>
+                <textarea id="required-qualifications" name="required_qualifications" placeholder="List must-have qualifications for this role"></textarea>
+                <div class="field-hint">These are the non-negotiable requirements for the role.</div>
+            </div>
+        </div>
+        
         <div class="field-checkboxes">
             <label class="field-checkbox">
                 <input type="checkbox" checked onchange="toggleField('required-qualifications')">
@@ -144,30 +185,27 @@
                 Preferred Qualifications
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('certifications')">
+                <input type="checkbox" onchange="toggleField('certifications')">
                 Certifications
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('legal')">
+                <input type="checkbox" onchange="toggleField('legal')">
                 Legal Eligibility
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('background-checks')">
+                <input type="checkbox" onchange="toggleField('background-checks')">
                 Background Checks
             </label>
             <label class="field-checkbox">
-                <input type="checkbox" checked onchange="toggleField('clearance')">
+                <input type="checkbox" onchange="toggleField('clearance')">
                 Clearance Level
             </label>
         </div>
         
-        <div class="form-group optional-field" id="required-qualifications-group">
-            <label for="required-qualifications">Required Qualifications:</label>
-            <textarea id="required-qualifications" name="required_qualifications" placeholder="Minimum requirements for the role"></textarea>
-        </div>
         <div class="form-group optional-field" id="preferred-qualifications-group">
             <label for="preferred-qualifications">Preferred Qualifications:</label>
-            <textarea id="preferred-qualifications" name="preferred_qualifications" placeholder="Desired but not required qualifications"></textarea>
+            <textarea id="preferred-qualifications" name="preferred_qualifications" placeholder="Nice-to-have qualifications that would be beneficial"></textarea>
+            <div class="field-hint">Additional qualifications that would be advantageous but aren't required.</div>
         </div>
         <div class="form-group optional-field" id="certifications-group">
             <label for="certifications">Mandatory Certifications:</label>
@@ -321,10 +359,6 @@
             </label>
         </div>
         
-        <div class="form-group optional-field" id="work-model-group">
-            <label for="work-model">Work Model:</label>
-            <input type="text" id="work-model" name="work_model" placeholder="Remote, hybrid, on-site, etc.">
-        </div>
         <div class="form-group optional-field" id="work-locations-group">
             <label for="work-locations">Work Locations:</label>
             <textarea id="work-locations" name="work_locations" placeholder="Possible work locations"></textarea>
@@ -419,6 +453,7 @@ function toggleCompactForm(formId) {
 function updateFormProgress(formId) {
     const form = document.getElementById(formId);
     const progressBar = document.getElementById(formId + '-progress');
+    const progressPercent = document.getElementById(formId + '-progress-percent');
     
     if (form && progressBar) {
         const totalFields = form.querySelectorAll('.form-group').length;
@@ -426,6 +461,9 @@ function updateFormProgress(formId) {
         
         const progress = Math.round((filledFields / totalFields) * 100);
         progressBar.style.width = progress + '%';
+        if (progressPercent) {
+            progressPercent.innerText = progress + '%';
+        }
     }
 }
 

@@ -642,4 +642,75 @@ input:read-only, textarea:read-only {
 
 .eye-icon {
     font-size: 1.2rem;
+}
+
+/* Form tips and hints */
+.form-tips {
+    margin-bottom: 2rem;
+    background-color: #f0f7ff;
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.tip {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.tip:last-child {
+    margin-bottom: 0;
+}
+
+.tip-icon {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.tip-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.field-hint {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.section-description {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.progress-label {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+/* Essential fields highlighting */
+.essential-fields {
+    margin-bottom: 1.5rem;
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #edf2f7;
+}
+
+.essential-fields .form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Highlight essential fields in compact mode */
+.company-form-compact .essential-fields,
+.job-form-compact .essential-fields {
+    display: block;
+    background-color: #f0f7ff;
+    border-color: #dbeafe;
 } 
