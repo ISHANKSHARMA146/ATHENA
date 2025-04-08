@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - Professional Platform</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .company-container, .job-container {
+            display: none;
+            max-width: 600px;
+            margin: 2rem auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .response {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .error {
+            background-color: #fee2e2;
+            color: var(--error-color);
+            border: 1px solid #fecaca;
+        }
+
+        .success {
+            background-color: #dcfce7;
+            color: var(--success-color);
+            border: 1px solid #bbf7d0;
+        }
+
+        .auth-status {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .logged-in {
+            background-color: #dcfce7;
+            color: var(--success-color);
+        }
+
+        .logged-out {
+            background-color: #fee2e2;
+            color: var(--error-color);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nav-buttons button {
+            flex: 1;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .auth-tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .auth-tab:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-links {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .auth-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .password-requirements {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .password-requirements ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .password-requirements li {
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-requirements li::before {
+            content: "•";
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .password-requirements li.valid {
+            color: var(--success-color);
+        }
+
+        .password-requirements li.valid::before {
+            content: "✓";
+        }
+
+        .social-login {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .social-login p {
+            margin-bottom: 1rem;
+            color: #6b7280;
+            position: relative;
+        }
+
+        .social-login p::before,
+        .social-login p::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .social-button {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .social-button:hover {
+            background-color: #f9fafb;
+            border-color: var(--primary-color);
+        }
+
+        .social-button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .job-list {
+            margin-bottom: 2rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .job-item {
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .job-item h3 {
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .job-item p {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .no-jobs {
+            text-align: center;
+            color: #6b7280;
+            padding: 2rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+        }
+        
+        .loading-jobs {
+            text-align: center;
+            color: #6b7280;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            font-style: italic;
+        }
+        
+        .error {
+            text-align: center;
+            color: var(--error-color);
+            padding: 1rem;
+            background: #fee2e2;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+        }
+        
+        .header {
+            display: none;
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-email {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .sign-out-btn {
+            background-color: transparent;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            width: auto;
+            transition: all 0.2s;
+        }
+        
+        .sign-out-btn:hover {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .company-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .company-summary h2 {
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .edit-company-btn {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            width: auto;
+            transition: all 0.2s;
+        }
+
+        .edit-company-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header" id="header">
+        <div class="header-content">
+            <div class="logo">Athena</div>
+            <div class="user-info">
+                <span class="user-email" id="header-user-email"></span>
+                <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="auth-container" class="auth-container">
+            <h1>Welcome to Athena</h1>
+            <div id="auth-status" class="auth-status logged-out">
+                Not logged in
+            </div>
+
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="showAuthForm('login')">Login</div>
+                <div class="auth-tab" onclick="showAuthForm('signup')">Sign Up</div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                </div>
+                <button id="login-btn" onclick="signIn()">Sign In</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showAuthForm('forgot-password')">Forgot Password?</a>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signup-form" class="auth-form">
+                <div class="form-group">
+                    <label for="signup-email">Email:</label>
+                    <input type="email" id="signup-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password:</label>
+                    <input type="password" id="signup-password" placeholder="Create a password" required oninput="validatePassword()">
+                    <div class="password-requirements">
+                        <ul>
+                            <li id="length-req">At least 8 characters</li>
+                            <li id="uppercase-req">At least one uppercase letter</li>
+                            <li id="lowercase-req">At least one lowercase letter</li>
+                            <li id="number-req">At least one number</li>
+                            <li id="special-req">At least one special character</li>
+                            <li id="match-req">Passwords match</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required oninput="validatePassword()">
+                </div>
+                <button id="signup-btn" onclick="signUp()">Create Account</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showAuthForm('login')">Already have an account? Sign in</a>
+                </div>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="forgot-password-form" class="auth-form">
+                <div class="form-group">
+                    <label for="reset-email">Email:</label>
+                    <input type="email" id="reset-email" placeholder="Enter your email" required>
+                </div>
+                <button id="reset-btn" onclick="resetPassword()">Send Reset Link</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showAuthForm('login')">Back to Login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Form: Create Mode -->
+        <div id="company-container" class="company-container">
+            <h1 id="company-form-title">Company Profile</h1>
+            <div class="form-group">
+                <label for="company-name">Company Name:</label>
+                <input type="text" id="company-name" placeholder="Enter company name" required>
+            </div>
+            <div class="form-group">
+                <label for="company-address">Address:</label>
+                <input type="text" id="company-address" placeholder="Enter company address" required>
+            </div>
+            <div class="form-group">
+                <label for="company-description">Description:</label>
+                <textarea id="company-description" placeholder="Enter company description" required></textarea>
+            </div>
+            <button id="create-company-btn" onclick="createOrUpdateCompany()">Create Company Profile</button>
+            <div id="company-response" class="response"></div>
+            <div class="nav-buttons">
+                <button id="to-job-btn" onclick="showJobForm()">Next: Manage Job Descriptions</button>
+            </div>
+        </div>
+
+        <div id="job-container" class="job-container">
+            <h1>Job Descriptions</h1>
+            
+            <div class="company-summary">
+                <h2 id="company-name-display"></h2>
+                <button class="edit-company-btn" onclick="showCompanyForm()">Edit Company Profile</button>
+            </div>
+            
+            <div id="job-list" class="job-list">
+                <!-- Job descriptions will be listed here -->
+            </div>
+            <div class="form-group">
+                <label for="job-title">Job Title:</label>
+                <input type="text" id="job-title" placeholder="Enter job title" required>
+            </div>
+            <div class="form-group">
+                <label for="job-description">Description:</label>
+                <textarea id="job-description" placeholder="Enter job description" required></textarea>
+            </div>
+            <button id="submit-job-btn" onclick="submitJob()">Add Job Description</button>
+            <div id="job-response" class="response"></div>
+        </div>
+    </div>
+
+    <script>
+        let firebaseConfig = null;
+        let auth = null;
+
+        // Fetch Firebase config from backend
+        async function initializeFirebase() {
+            try {
+                const response = await fetch('/api/config/firebase');
+                firebaseConfig = await response.json();
+                
+                // Initialize Firebase
+                firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                
+                // Monitor auth state
+                auth.onAuthStateChanged((user) => {
+                    const authStatus = document.getElementById('auth-status');
+                    const authContainer = document.getElementById('auth-container');
+                    const companyContainer = document.getElementById('company-container');
+                    const header = document.getElementById('header');
+                    
+                    if (user) {
+                        // Update header
+                        document.getElementById('header-user-email').textContent = user.email;
+                        header.style.display = 'block';
+                        
+                        // Update auth status
+                        authStatus.textContent = `Logged in as: ${user.email}`;
+                        authStatus.className = 'auth-status logged-in';
+                        
+                        // Hide auth container
+                        authContainer.style.display = 'none';
+                        
+                        // Check if user has a company
+                        loadUserCompany(user.uid).then(hasCompany => {
+                            if (hasCompany) {
+                                // User has a company, go to job descriptions
+                                document.getElementById('job-container').style.display = 'block';
+                                companyContainer.style.display = 'none';
+                                loadCompanyJobs();
+                            } else {
+                                // User doesn't have a company, show company form
+                                companyContainer.style.display = 'block';
+                                document.getElementById('job-container').style.display = 'none';
+                            }
+                        });
+                    } else {
+                        // Hide header
+                        header.style.display = 'none';
+                        
+                        // Update auth status
+                        authStatus.textContent = 'Not logged in';
+                        authStatus.className = 'auth-status logged-out';
+                        
+                        // Show login container
+                        authContainer.style.display = 'block';
+                        companyContainer.style.display = 'none';
+                        document.getElementById('job-container').style.display = 'none';
+                        
+                        // Clear company data on logout
+                        localStorage.removeItem('currentCompanyId');
+                        window.currentCompanyId = null;
+                    }
+                });
+            } catch (error) {
+                console.error('Error initializing Firebase:', error);
+                alert('Error initializing the application. Please try again later.');
+            }
+        }
+
+        // Initialize Firebase on page load
+        initializeFirebase();
+
+        // Show auth form
+        function showAuthForm(formType) {
+            // Hide all forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            // Show selected form
+            document.getElementById(`${formType}-form`).classList.add('active');
+            
+            // Update tabs
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            if (formType === 'login' || formType === 'signup') {
+                document.querySelector(`.auth-tab:nth-child(${formType === 'login' ? 1 : 2})`).classList.add('active');
+            }
+        }
+
+        // Validate password requirements
+        function validatePassword() {
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // Password requirements
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            const passwordsMatch = password === confirmPassword && password !== '';
+            
+            // Update requirement indicators
+            document.getElementById('length-req').classList.toggle('valid', hasLength);
+            document.getElementById('uppercase-req').classList.toggle('valid', hasUppercase);
+            document.getElementById('lowercase-req').classList.toggle('valid', hasLowercase);
+            document.getElementById('number-req').classList.toggle('valid', hasNumber);
+            document.getElementById('special-req').classList.toggle('valid', hasSpecial);
+            document.getElementById('match-req').classList.toggle('valid', passwordsMatch);
+            
+            // Enable/disable signup button
+            const signupBtn = document.getElementById('signup-btn');
+            signupBtn.disabled = !(hasLength && hasUppercase && hasLowercase && hasNumber && hasSpecial && passwordsMatch);
+        }
+
+        // Sign in function
+        async function signIn() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const signInBtn = document.getElementById('login-btn');
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            signInBtn.disabled = true;
+            signInBtn.innerHTML = '<span class="loading"></span>Signing in...';
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                alert('Error signing in: ' + error.message);
+            } finally {
+                signInBtn.disabled = false;
+                signInBtn.textContent = 'Sign In';
+            }
+        }
+
+        // Sign up function
+        async function signUp() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const signupBtn = document.getElementById('signup-btn');
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            signupBtn.disabled = true;
+            signupBtn.innerHTML = '<span class="loading"></span>Creating account...';
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                await userCredential.user.sendEmailVerification();
+                alert('Account created successfully! Please check your email for verification.');
+                showAuthForm('login');
+            } catch (error) {
+                alert('Error creating account: ' + error.message);
+            } finally {
+                signupBtn.disabled = false;
+                signupBtn.textContent = 'Create Account';
+            }
+        }
+
+        // Reset password function
+        async function resetPassword() {
+            const email = document.getElementById('reset-email').value;
+            const resetBtn = document.getElementById('reset-btn');
+            
+            if (!email) {
+                alert('Please enter your email');
+                return;
+            }
+
+            resetBtn.disabled = true;
+            resetBtn.innerHTML = '<span class="loading"></span>Sending reset link...';
+            
+            try {
+                await auth.sendPasswordResetEmail(email);
+                alert('Password reset link sent to your email');
+                showAuthForm('login');
+            } catch (error) {
+                alert('Error sending reset link: ' + error.message);
+            } finally {
+                resetBtn.disabled = false;
+                resetBtn.textContent = 'Send Reset Link';
+            }
+        }
+
+        // Show job form
+        function showJobForm() {
+            document.getElementById('company-container').style.display = 'none';
+            document.getElementById('job-container').style.display = 'block';
+            // Display company name in job page
+            const companyName = document.getElementById('company-name').value;
+            if (companyName) {
+                document.getElementById('company-name-display').textContent = companyName;
+            }
+            // Load job descriptions when showing the job form
+            loadCompanyJobs();
+        }
+
+        // Show company form
+        function showCompanyForm() {
+            document.getElementById('job-container').style.display = 'none';
+            document.getElementById('company-container').style.display = 'block';
+        }
+
+        // Load user's company data
+        async function loadUserCompany(userId) {
+            try {
+                const response = await fetch(`/company/user/${userId}`);
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.data) {
+                    // Store company data
+                    window.currentCompanyId = data.data.id;
+                    localStorage.setItem('currentCompanyId', data.data.id);
+                    
+                    // Set form to edit mode
+                    document.getElementById('company-form-title').textContent = 'Edit Company Profile';
+                    document.getElementById('company-name').value = data.data.name;
+                    document.getElementById('company-address').value = data.data.address;
+                    document.getElementById('company-description').value = data.data.description || '';
+                    document.getElementById('create-company-btn').textContent = 'Update Company Profile';
+                    document.getElementById('to-job-btn').style.display = 'block';
+                    
+                    // Update company name in job page
+                    document.getElementById('company-name-display').textContent = data.data.name;
+                    
+                    return true;
+                } else {
+                    // Set form to create mode
+                    document.getElementById('company-form-title').textContent = 'Create Company Profile';
+                    document.getElementById('company-name').value = '';
+                    document.getElementById('company-address').value = '';
+                    document.getElementById('company-description').value = '';
+                    document.getElementById('create-company-btn').textContent = 'Create Company Profile';
+                    document.getElementById('to-job-btn').style.display = 'none';
+                    
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error loading company data:', error);
+                return false;
+            }
+        }
+
+        // Create or update company profile
+        async function createOrUpdateCompany() {
+            const name = document.getElementById('company-name').value;
+            const address = document.getElementById('company-address').value;
+            const description = document.getElementById('company-description').value;
+            const responseDiv = document.getElementById('company-response');
+            const companyBtn = document.getElementById('create-company-btn');
+            
+            if (!name || !address) {
+                responseDiv.textContent = 'Please fill in all required fields';
+                responseDiv.className = 'response error';
+                return;
+            }
+
+            const isUpdate = window.currentCompanyId ? true : false;
+            companyBtn.disabled = true;
+            companyBtn.innerHTML = `<span class="loading"></span>${isUpdate ? 'Updating' : 'Creating'} Company Profile...`;
+            
+            try {
+                let url, method, body;
+                
+                if (isUpdate) {
+                    // Update existing company
+                    url = '/company/update';
+                    method = 'PUT';
+                    body = {
+                        id: parseInt(window.currentCompanyId),
+                        name,
+                        address,
+                        description
+                    };
+                } else {
+                    // Create new company
+                    url = '/company/create';
+                    method = 'POST';
+                    body = {
+                        user_id: auth.currentUser.uid,
+                        name,
+                        address,
+                        description
+                    };
+                }
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    responseDiv.textContent = `Company profile ${isUpdate ? 'updated' : 'created'} successfully!`;
+                    responseDiv.className = 'response success';
+                    
+                    // Store company ID for job descriptions
+                    window.currentCompanyId = data.data.id;
+                    localStorage.setItem('currentCompanyId', data.data.id);
+                    
+                    // Update UI to edit mode
+                    document.getElementById('company-form-title').textContent = 'Edit Company Profile';
+                    document.getElementById('create-company-btn').textContent = 'Update Company Profile';
+                    document.getElementById('to-job-btn').style.display = 'block';
+                    
+                    // Show job form if it was a creation
+                    if (!isUpdate) {
+                        showJobForm();
+                    }
+                } else {
+                    throw new Error(data.detail || `Failed to ${isUpdate ? 'update' : 'create'} company profile`);
+                }
+            } catch (error) {
+                responseDiv.textContent = 'Error: ' + error.message;
+                responseDiv.className = 'response error';
+            } finally {
+                companyBtn.disabled = false;
+                companyBtn.textContent = isUpdate ? 'Update Company Profile' : 'Create Company Profile';
+            }
+        }
+
+        // Load company's job descriptions
+        async function loadCompanyJobs() {
+            // Try to get companyId from window object or localStorage
+            const companyId = window.currentCompanyId || localStorage.getItem('currentCompanyId');
+            
+            if (!companyId) {
+                return;
+            }
+            
+            const jobList = document.getElementById('job-list');
+            jobList.innerHTML = '<p class="loading-jobs">Loading job descriptions...</p>';
+            
+            try {
+                const response = await fetch(`/jd/company/${companyId}`);
+                const data = await response.json();
+                
+                jobList.innerHTML = ''; // Clear loading message
+                
+                if (data.status === 'success') {
+                    window.currentCompanyId = companyId; // Ensure it's set in memory
+                    
+                    if (!data.data || data.data.length === 0) {
+                        jobList.innerHTML = '<p class="no-jobs">No job descriptions added yet.</p>';
+                        return;
+                    }
+                    
+                    data.data.forEach(job => {
+                        const jobElement = document.createElement('div');
+                        jobElement.className = 'job-item';
+                        jobElement.innerHTML = `
+                            <h3>${job.title}</h3>
+                            <p>${job.description}</p>
+                        `;
+                        jobList.appendChild(jobElement);
+                    });
+                } else {
+                    jobList.innerHTML = '<p class="error">Error loading job descriptions</p>';
+                }
+            } catch (error) {
+                console.error('Error loading job descriptions:', error);
+                jobList.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        // Submit job function
+        async function submitJob() {
+            // Try to get companyId from window object or localStorage
+            const companyId = window.currentCompanyId || localStorage.getItem('currentCompanyId');
+            
+            if (!companyId) {
+                alert('Please create a company profile first');
+                showCompanyForm();
+                return;
+            }
+
+            const title = document.getElementById('job-title').value;
+            const description = document.getElementById('job-description').value;
+            const responseDiv = document.getElementById('job-response');
+            const submitJobBtn = document.getElementById('submit-job-btn');
+            
+            if (!title || !description) {
+                responseDiv.textContent = 'Please fill in all fields';
+                responseDiv.className = 'response error';
+                return;
+            }
+
+            submitJobBtn.disabled = true;
+            submitJobBtn.innerHTML = '<span class="loading"></span>Adding Job Description...';
+            
+            try {
+                const response = await fetch('/jd/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        company_id: parseInt(companyId),
+                        title,
+                        description
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    responseDiv.textContent = 'Job description added successfully!';
+                    responseDiv.className = 'response success';
+                    // Clear form
+                    document.getElementById('job-title').value = '';
+                    document.getElementById('job-description').value = '';
+                    // Reload job list
+                    loadCompanyJobs();
+                } else {
+                    throw new Error(data.detail || 'Failed to add job description');
+                }
+            } catch (error) {
+                responseDiv.textContent = 'Error: ' + error.message;
+                responseDiv.className = 'response error';
+            } finally {
+                submitJobBtn.disabled = false;
+                submitJobBtn.textContent = 'Add Job Description';
+            }
+        }
+
+        // Initialize data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in and has a company
+            const savedCompanyId = localStorage.getItem('currentCompanyId');
+            if (savedCompanyId) {
+                window.currentCompanyId = savedCompanyId;
+            }
+            
+            // The auth state change handler will take care of showing appropriate screens
+        });
+
+        // Sign out function
+        async function signOut() {
+            try {
+                await auth.signOut();
+                // Clear any stored company data
+                window.currentCompanyId = null;
+                localStorage.removeItem('currentCompanyId');
+            } catch (error) {
+                alert('Error signing out: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

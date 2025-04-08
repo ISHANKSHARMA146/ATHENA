@@ -1,0 +1,23 @@
+# .env.example - Template file for environment variables
+# Copy this file to .env and fill in your actual values
+
+# Firebase Backend Configuration (used by Firebase Admin SDK)
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_SERVICE_ACCOUNT=./firebase/service-account.json
+
+# Firebase Frontend Configuration
+FIREBASE_API_KEY=your-api-key
+FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+FIREBASE_PROJECT=your-project-id
+FIREBASE_STORAGE_BUCKET=your-project-id.firebasestorage.app
+FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+FIREBASE_APP_ID=your-app-id
+FIREBASE_MEASUREMENT_ID=your-measurement-id
+
+# Hasura Configuration
+HASURA_GRAPHQL_ENDPOINT=https://your-hasura-instance.hasura.app/v1/graphql
+HASURA_ADMIN_SECRET=your-hasura-admin-secret
+
+# Application Settings
+ENVIRONMENT=development
+APP_PORT=8000 
