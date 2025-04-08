@@ -1,25 +1,10 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-import sys
 import os
 
-# Add parent directory to path so we can import from project root
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+app = FastAPI()
 
-from routes import auth, company, jd
-from config.settings import settings
-# Import Vercel-compatible Firebase initialization
-from api.firebase_helper import initialize_firebase_for_vercel
-
-# Initialize Firebase with Vercel compatibility
-initialize_firebase_for_vercel()
-
-app = FastAPI(title="Athena - Firebase + Hasura Integration")
-
-# Configure CORS to allow all origins for simplicity
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -28,41 +13,47 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Get the directory of the current file
-base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+@app.get("/api/health")
+async def health_check():
+    return {"status": "ok", "message": "API is running"}
 
-# Set up templates and static folders
-templates = Jinja2Templates(directory=os.path.join(base_dir, "templates"))
-
-# Mount static files directory
-app.mount("/static", StaticFiles(directory=os.path.join(base_dir, "static")), name="static")
-
-# Include routers with prefixes
-app.include_router(auth.router, prefix="/auth")
-app.include_router(company.router, prefix="/company")
-app.include_router(jd.router, prefix="/jd")
-
-@app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-@app.get("/templates/{component_type}/{file_name}")
-async def get_component(component_type: str, file_name: str):
-    """Serve component templates"""
-    file_path = os.path.join(base_dir, "templates", component_type, file_name)
-    if os.path.exists(file_path):
-        return FileResponse(file_path)
-    return {"error": "File not found"}
+@app.get("/api/debug")
+async def debug_info():
+    """Debug endpoint to check environment variables"""
+    env_vars = {}
+    # Add safe environment variables (don't include secrets)
+    for key in ["VERCEL", "VERCEL_ENV", "VERCEL_URL", "VERCEL_REGION", 
+                "FIREBASE_PROJECT_ID", "ENVIRONMENT"]:
+        env_vars[key] = os.environ.get(key, "Not set")
+        
+    # Check if Firebase service account is set
+    env_vars["FIREBASE_SERVICE_ACCOUNT_JSON_SET"] = "Yes" if os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON") else "No"
+    
+    return {
+        "environment": env_vars,
+        "message": "Debug information"
+    }
 
 @app.get("/api/config/firebase")
 async def get_firebase_config():
     """Securely serve Firebase configuration"""
     return {
-        "apiKey": settings.firebase_api_key,
-        "authDomain": settings.firebase_auth_domain,
-        "projectId": settings.firebase_project,
-        "storageBucket": settings.firebase_storage_bucket,
-        "messagingSenderId": settings.firebase_messaging_sender_id,
-        "appId": settings.firebase_app_id,
-        "measurementId": settings.firebase_measurement_id
-    } 
+        "apiKey": os.environ.get("FIREBASE_API_KEY", ""),
+        "authDomain": os.environ.get("FIREBASE_AUTH_DOMAIN", ""),
+        "projectId": os.environ.get("FIREBASE_PROJECT", ""),
+        "storageBucket": os.environ.get("FIREBASE_STORAGE_BUCKET", ""),
+        "messagingSenderId": os.environ.get("FIREBASE_MESSAGING_SENDER_ID", ""),
+        "appId": os.environ.get("FIREBASE_APP_ID", ""),
+        "measurementId": os.environ.get("FIREBASE_MEASUREMENT_ID", "")
+    }
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to Athena API"}
+
+# Import routes at the bottom to avoid circular imports
+from routes import auth, company, jd
+
+app.include_router(auth.router, prefix="/auth")
+app.include_router(company.router, prefix="/company")
+app.include_router(jd.router, prefix="/jd") 

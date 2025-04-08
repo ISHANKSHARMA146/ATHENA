@@ -119,13 +119,23 @@ def execute_graphql(query: str, variables: dict = None):
         "Content-Type": "application/json",
         "x-hasura-admin-secret": settings.hasura_admin_secret
     }
-    response = requests.post(
-        settings.hasura_graphql_endpoint,
-        json={"query": query, "variables": variables},
-        headers=headers
-    )
-    response.raise_for_status()
-    return response.json()
+    
+    # Add better error handling
+    try:
+        response = requests.post(
+            settings.hasura_graphql_endpoint,
+            json={"query": query, "variables": variables},
+            headers=headers,
+            timeout=10  # Add timeout
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        raise Exception(f"Hasura GraphQL request failed: {str(e)}")
+    except ValueError as e:
+        raise Exception(f"Invalid JSON response from Hasura: {str(e)}")
+    except Exception as e:
+        raise Exception(f"Error executing GraphQL query: {str(e)}")
 
 def insert_company_profile(profile):
     # Build the dynamic fields for the query
