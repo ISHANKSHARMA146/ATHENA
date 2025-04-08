@@ -2,19 +2,117 @@
 import requests
 from config.settings import settings
 from pydantic import BaseModel
+from typing import Optional
 
 class CompanyProfileModel(BaseModel):
-    id: int = None
+    id: Optional[int] = None
     user_id: str
+    
+    # Company Identity
     name: str
-    address: str
-    description: str = None
+    overview: Optional[str] = None
+    industry: Optional[str] = None
+    year_founded: Optional[int] = None
+    headquarters_location: Optional[str] = None
+    global_presence: Optional[str] = None
+    company_size: Optional[str] = None
+    ownership_type: Optional[str] = None
+    company_type: Optional[str] = None
+    products_services: Optional[str] = None
+    specialties: Optional[str] = None
+    growth_stage: Optional[str] = None
+    key_markets: Optional[str] = None
+    
+    # Leadership & Team
+    founders: Optional[str] = None
+    leadership_team: Optional[str] = None
+    board_members: Optional[str] = None
+    team_composition: Optional[str] = None
+    
+    # Culture & Brand
+    work_culture: Optional[str] = None
+    dei_statement: Optional[str] = None
+    sustainability_initiatives: Optional[str] = None
+    awards: Optional[str] = None
+    milestones: Optional[str] = None
+    media_mentions: Optional[str] = None
+    success_stories: Optional[str] = None
+    unique_differentiators: Optional[str] = None
+    brand_voice: Optional[str] = None
+    employer_brand_sentiment: Optional[str] = None
+    
+    # Hiring & Operations
+    hiring_volumes: Optional[str] = None
+    company_languages: Optional[str] = None
+    workplace_model: Optional[str] = None
+    hiring_regions: Optional[str] = None
+    
+    # Web Presence & Links
+    logo_url: Optional[str] = None
+    website_url: Optional[str] = None
+    careers_page_url: Optional[str] = None
+    social_media_links: Optional[str] = None
+    employer_review_links: Optional[str] = None
 
 class JobDescriptionModel(BaseModel):
-    id: int = None
+    id: Optional[int] = None
     company_id: int
+    
+    # Basic Job Info
     title: str
-    description: str
+    job_code: Optional[str] = None
+    job_level: Optional[str] = None
+    department: Optional[str] = None
+    job_function: Optional[str] = None
+    
+    # Job Posting Metadata
+    contract_duration: Optional[str] = None
+    time_commitment: Optional[str] = None
+    
+    # Detailed Role Description
+    job_summary: Optional[str] = None
+    day_to_day_tasks: Optional[str] = None
+    performance_indicators: Optional[str] = None
+    decision_making: Optional[str] = None
+    stakeholder_interactions: Optional[str] = None
+    
+    # Requirements Breakdown
+    required_qualifications: Optional[str] = None
+    preferred_qualifications: Optional[str] = None
+    mandatory_certifications: Optional[str] = None
+    legal_eligibility: Optional[str] = None
+    background_checks: Optional[str] = None
+    clearance_level: Optional[str] = None
+    
+    # Skills Classification
+    hard_skills: Optional[str] = None
+    soft_skills: Optional[str] = None
+    domain_expertise: Optional[str] = None
+    methodologies: Optional[str] = None
+    languages: Optional[str] = None
+    skills_priority: Optional[str] = None
+    
+    # Compensation Details
+    base_salary: Optional[str] = None
+    bonus_structure: Optional[str] = None
+    equity_options: Optional[str] = None
+    benefits: Optional[str] = None
+    relocation_assistance: Optional[str] = None
+    visa_sponsorship: Optional[str] = None
+    
+    # Work Environment
+    work_model: Optional[str] = None
+    work_locations: Optional[str] = None
+    travel_requirements: Optional[str] = None
+    shift_type: Optional[str] = None
+    
+    # Career Path Info
+    growth_opportunities: Optional[str] = None
+    training_development: Optional[str] = None
+    mentorship: Optional[str] = None
+    succession_planning: Optional[str] = None
+    culture_page_link: Optional[str] = None
+    careers_page_link: Optional[str] = None
 
 def execute_graphql(query: str, variables: dict = None):
     headers = {
@@ -30,25 +128,30 @@ def execute_graphql(query: str, variables: dict = None):
     return response.json()
 
 def insert_company_profile(profile):
-    query = """
-    mutation ($user_id: String!, $name: String!, $address: String!, $description: String) {
-      insert_company_profiles(objects: {user_id: $user_id, name: $name, address: $address, description: $description}) {
-        returning {
+    # Build the dynamic fields for the query
+    fields = []
+    variables = {}
+    
+    # Process all fields from the profile model
+    for key, value in profile.dict().items():
+        if key != "id" and value is not None:  # Skip id and None values
+            fields.append(f"{key}: ${key}")
+            variables[key] = value
+    
+    # Build the GraphQL mutation
+    query = f"""
+    mutation ({', '.join(f"${key}: {get_gql_type(key, value)}" for key, value in variables.items())}) {{
+      insert_company_profiles(objects: {{{', '.join(fields)}}}) {{
+        returning {{
           id
           user_id
           name
-          address
-          description
-        }
-      }
-    }
+          # Include other fields as needed
+        }}
+      }}
+    }}
     """
-    variables = {
-        "user_id": profile.user_id,
-        "name": profile.name,
-        "address": profile.address,
-        "description": profile.description
-    }
+    
     result = execute_graphql(query, variables)
     try:
         data = result["data"]["insert_company_profiles"]["returning"][0]
@@ -57,26 +160,37 @@ def insert_company_profile(profile):
         raise Exception("Error parsing response from Hasura") from e
 
 def update_company_profile(profile):
+    # Extract the id for pk_columns
+    profile_id = profile.id
+    
+    # Build the dynamic fields for _set
+    set_fields = {}
+    
+    # Process all fields from the profile model
+    for key, value in profile.dict().items():
+        if key != "id" and value is not None:  # Skip id and None values
+            set_fields[key] = value
+    
+    # Build the GraphQL mutation
     query = """
-    mutation ($id: Int!, $name: String!, $address: String!, $description: String) {
+    mutation ($id: Int!, $set_fields: company_profiles_set_input!) {
       update_company_profiles_by_pk(
         pk_columns: {id: $id}, 
-        _set: {name: $name, address: $address, description: $description}
+        _set: $set_fields
       ) {
         id
         user_id
         name
-        address
-        description
+        # Include other fields as needed
       }
     }
     """
+    
     variables = {
-        "id": profile.id,
-        "name": profile.name,
-        "address": profile.address,
-        "description": profile.description
+        "id": profile_id,
+        "set_fields": set_fields
     }
+    
     result = execute_graphql(query, variables)
     try:
         data = result["data"]["update_company_profiles_by_pk"]
@@ -91,8 +205,7 @@ def get_company_by_user_id(user_id: str):
         id
         user_id
         name
-        address
-        description
+        # Include other fields you want to retrieve
       }
     }
     """
@@ -109,23 +222,30 @@ def get_company_by_user_id(user_id: str):
         raise Exception("Error parsing response from Hasura") from e
 
 def insert_job_description(jd):
-    query = """
-    mutation ($company_id: Int!, $title: String!, $description: String!) {
-      insert_job_descriptions(objects: {company_id: $company_id, title: $title, description: $description}) {
-        returning {
+    # Build the dynamic fields for the query
+    fields = []
+    variables = {}
+    
+    # Process all fields from the jd model
+    for key, value in jd.dict().items():
+        if key != "id" and value is not None:  # Skip id and None values
+            fields.append(f"{key}: ${key}")
+            variables[key] = value
+    
+    # Build the GraphQL mutation
+    query = f"""
+    mutation ({', '.join(f"${key}: {get_gql_type(key, value)}" for key, value in variables.items())}) {{
+      insert_job_descriptions(objects: {{{', '.join(fields)}}}) {{
+        returning {{
           id
           company_id
           title
-          description
-        }
-      }
-    }
+          # Include other fields as needed
+        }}
+      }}
+    }}
     """
-    variables = {
-        "company_id": jd.company_id,
-        "title": jd.title,
-        "description": jd.description
-    }
+    
     result = execute_graphql(query, variables)
     try:
         data = result["data"]["insert_job_descriptions"]["returning"][0]
@@ -140,7 +260,7 @@ def get_company_jobs(company_id: int):
         id
         company_id
         title
-        description
+        # Include other fields you want to retrieve
       }
     }
     """
@@ -153,3 +273,11 @@ def get_company_jobs(company_id: int):
         return [JobDescriptionModel(**job) for job in jobs]
     except (KeyError, IndexError) as e:
         raise Exception("Error parsing response from Hasura") from e
+
+# Helper function to determine GraphQL type from Python type
+def get_gql_type(key, value):
+    if key == "company_id" or key == "id" or key == "year_founded":
+        return "Int!"
+    if isinstance(value, bool):
+        return "Boolean!"
+    return "String!"

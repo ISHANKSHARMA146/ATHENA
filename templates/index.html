@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - Professional Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <!-- Header Component -->
+    <div class="header" id="header">
+        <div class="header-content">
+            <div class="logo">Athena</div>
+            <div class="user-info">
+                <span class="user-email" id="header-user-email"></span>
+                <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Auth Component -->
+        <div id="auth-container" class="auth-container">
+            <h1>Welcome to Athena</h1>
+            <div id="auth-status" class="auth-status logged-out">
+                Not logged in
+            </div>
+
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="showAuthForm('login')">Login</div>
+                <div class="auth-tab" onclick="showAuthForm('signup')">Sign Up</div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                </div>
+                <button id="login-btn" onclick="signIn()">Sign In</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showAuthForm('forgot-password')">Forgot Password?</a>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signup-form" class="auth-form">
+                <div class="form-group">
+                    <label for="signup-email">Email:</label>
+                    <input type="email" id="signup-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password:</label>
+                    <input type="password" id="signup-password" placeholder="Create a password" required oninput="validatePassword()">
+                    <div class="password-requirements">
+                        <ul>
+                            <li id="length-req">At least 8 characters</li>
+                            <li id="uppercase-req">At least one uppercase letter</li>
+                            <li id="lowercase-req">At least one lowercase letter</li>
+                            <li id="number-req">At least one number</li>
+                            <li id="special-req">At least one special character</li>
+                            <li id="match-req">Passwords match</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required oninput="validatePassword()">
+                </div>
+                <button id="signup-btn" onclick="signUp()">Create Account</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showAuthForm('login')">Already have an account? Sign in</a>
+                </div>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="forgot-password-form" class="auth-form">
+                <div class="form-group">
+                    <label for="reset-email">Email:</label>
+                    <input type="email" id="reset-email" placeholder="Enter your email" required>
+                </div>
+                <button id="reset-btn" onclick="resetPassword()">Send Reset Link</button>
+                <div class="auth-links">
+                    <a href="#" onclick="showAuthForm('login')">Back to Login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Component -->
+        <div id="company-container" class="company-container">
+            <h1 id="company-form-title">Company Profile</h1>
+            
+            <!-- Company form will be loaded here -->
+            <div id="company-form-container"></div>
+            
+            <button id="create-company-btn" onclick="createOrUpdateCompany()">Create Company Profile</button>
+            <div id="company-response" class="response"></div>
+            <div class="nav-buttons">
+                <button id="to-job-btn" onclick="showJobForm()">Next: Manage Job Descriptions</button>
+            </div>
+        </div>
+
+        <!-- Job Component -->
+        <div id="job-container" class="job-container">
+            <h1>Job Descriptions</h1>
+            
+            <div class="company-summary">
+                <h2 id="company-name-display"></h2>
+                <button class="edit-company-btn" onclick="showCompanyForm()">Edit Company Profile</button>
+            </div>
+            
+            <div id="job-list" class="job-list">
+                <!-- Job descriptions will be listed here -->
+            </div>
+            
+            <!-- Job form will be loaded here -->
+            <div id="job-form-container"></div>
+            
+            <button id="submit-job-btn" onclick="submitJob()">Add Job Description</button>
+            <div id="job-response" class="response"></div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript -->
+    <script src="/static/js/firebase-config.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/company.js"></script>
+    <script src="/static/js/job.js"></script>
+    <script src="/static/js/main.js"></script>
+    
+    <script>
+        // Load forms from component files
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load company form
+            fetch('/components/company/company-form.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('company-form-container').innerHTML = html;
+                });
+                
+            // Load job form
+            fetch('/components/job/job-form.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('job-form-container').innerHTML = html;
+                });
+        });
+    </script>
+</body>
+</html> 

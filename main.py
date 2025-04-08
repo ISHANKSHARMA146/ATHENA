@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from routes import auth, company, jd
 from config.settings import settings
 import firebase_admin_setup  # This ensures Firebase is initialized
@@ -17,6 +18,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Include routers with prefixes
 app.include_router(auth.router, prefix="/auth")
 app.include_router(company.router, prefix="/company")
@@ -24,7 +28,7 @@ app.include_router(jd.router, prefix="/jd")
 
 @app.get("/")
 async def read_root():
-    return FileResponse('index.html')
+    return FileResponse('templates/index.html')
 
 @app.get("/api/config/firebase")
 async def get_firebase_config():
@@ -38,6 +42,11 @@ async def get_firebase_config():
         "appId": settings.firebase_app_id,
         "measurementId": settings.firebase_measurement_id
     }
+
+@app.get("/components/{component_type}/{file_name}")
+async def get_component(component_type: str, file_name: str):
+    """Serve component templates"""
+    return FileResponse(f'templates/{component_type}/{file_name}')
 
 if __name__ == "__main__":
     import uvicorn

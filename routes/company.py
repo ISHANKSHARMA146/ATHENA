@@ -1,21 +1,65 @@
 # routes/company.py
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import Optional
 from services import hasura_service
 
 router = APIRouter()
 
+# Company Profile Input Model
 class CompanyProfile(BaseModel):
-    name: str
-    address: str
-    description: str = None
+    # Required fields
     user_id: str
-
-class CompanyProfileUpdate(BaseModel):
-    id: int
     name: str
-    address: str
-    description: str = None
+    
+    # Company Identity - optional fields
+    overview: Optional[str] = None
+    industry: Optional[str] = None
+    year_founded: Optional[int] = None
+    headquarters_location: Optional[str] = None
+    global_presence: Optional[str] = None
+    company_size: Optional[str] = None
+    ownership_type: Optional[str] = None
+    company_type: Optional[str] = None
+    products_services: Optional[str] = None
+    specialties: Optional[str] = None
+    growth_stage: Optional[str] = None
+    key_markets: Optional[str] = None
+    
+    # Leadership & Team
+    founders: Optional[str] = None
+    leadership_team: Optional[str] = None
+    board_members: Optional[str] = None
+    team_composition: Optional[str] = None
+    
+    # Culture & Brand
+    work_culture: Optional[str] = None
+    dei_statement: Optional[str] = None
+    sustainability_initiatives: Optional[str] = None
+    awards: Optional[str] = None
+    milestones: Optional[str] = None
+    media_mentions: Optional[str] = None
+    success_stories: Optional[str] = None
+    unique_differentiators: Optional[str] = None
+    brand_voice: Optional[str] = None
+    employer_brand_sentiment: Optional[str] = None
+    
+    # Hiring & Operations
+    hiring_volumes: Optional[str] = None
+    company_languages: Optional[str] = None
+    workplace_model: Optional[str] = None
+    hiring_regions: Optional[str] = None
+    
+    # Web Presence & Links
+    logo_url: Optional[str] = None
+    website_url: Optional[str] = None
+    careers_page_url: Optional[str] = None
+    social_media_links: Optional[str] = None
+    employer_review_links: Optional[str] = None
+
+class CompanyProfileUpdate(CompanyProfile):
+    id: int
+    user_id: Optional[str] = None  # Make user_id optional for updates
 
 @router.post("/create", tags=["Company Profile"])
 async def create_company(profile: CompanyProfile):

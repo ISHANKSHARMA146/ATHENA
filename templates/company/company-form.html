@@ -1,0 +1,381 @@
+<!-- Company Profile Form Template -->
+<div class="compact-toggle">
+    <label>
+        <input type="checkbox" id="company-compact-toggle" onchange="toggleCompactForm('company-form')">
+        Show only required fields
+    </label>
+</div>
+
+<div class="form-progress">
+    <div class="progress-bar" id="company-form-progress"></div>
+</div>
+
+<form id="company-form">
+    <!-- Required Fields -->
+    <div class="form-section">
+        <h2>Basic Information</h2>
+        <div class="form-group">
+            <label for="company-name" class="required-label">Company Name:</label>
+            <input type="text" id="company-name" name="name" placeholder="Enter company name" required>
+        </div>
+    </div>
+    
+    <!-- Company Identity -->
+    <div class="form-section">
+        <h2>Company Identity</h2>
+        <div class="field-checkboxes">
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-overview')">
+                Overview
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-industry')">
+                Industry
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-year-founded')">
+                Year Founded
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-headquarters')">
+                Headquarters
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-global-presence')">
+                Global Presence
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-size')">
+                Company Size
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-ownership')">
+                Ownership Type
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-type')">
+                Company Type
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-products')">
+                Products/Services
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-specialties')">
+                Specialties
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-growth')">
+                Growth Stage
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-markets')">
+                Key Markets
+            </label>
+        </div>
+        
+        <div class="form-group optional-field" id="company-overview-group">
+            <label for="company-overview">Overview:</label>
+            <textarea id="company-overview" name="overview" placeholder="Brief company overview"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-industry-group">
+            <label for="company-industry">Industry:</label>
+            <input type="text" id="company-industry" name="industry" placeholder="Company industry">
+        </div>
+        <div class="form-group optional-field" id="company-year-founded-group">
+            <label for="company-year-founded">Year Founded:</label>
+            <input type="number" id="company-year-founded" name="year_founded" placeholder="Year company was founded">
+        </div>
+        <div class="form-group optional-field" id="company-headquarters-group">
+            <label for="company-headquarters">Headquarters Location:</label>
+            <input type="text" id="company-headquarters" name="headquarters_location" placeholder="Company headquarters">
+        </div>
+        <div class="form-group optional-field" id="company-global-presence-group">
+            <label for="company-global-presence">Global Presence:</label>
+            <textarea id="company-global-presence" name="global_presence" placeholder="Countries/regions of operation"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-size-group">
+            <label for="company-size">Company Size:</label>
+            <input type="text" id="company-size" name="company_size" placeholder="Number of employees">
+        </div>
+        <div class="form-group optional-field" id="company-ownership-group">
+            <label for="company-ownership">Ownership Type:</label>
+            <input type="text" id="company-ownership" name="ownership_type" placeholder="Public, private, etc.">
+        </div>
+        <div class="form-group optional-field" id="company-type-group">
+            <label for="company-type">Company Type:</label>
+            <input type="text" id="company-type" name="company_type" placeholder="Startup, enterprise, etc.">
+        </div>
+        <div class="form-group optional-field" id="company-products-group">
+            <label for="company-products">Products/Services:</label>
+            <textarea id="company-products" name="products_services" placeholder="Main products and services"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-specialties-group">
+            <label for="company-specialties">Specialties:</label>
+            <textarea id="company-specialties" name="specialties" placeholder="Company specialties"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-growth-group">
+            <label for="company-growth">Growth Stage:</label>
+            <input type="text" id="company-growth" name="growth_stage" placeholder="Seed, Series A, etc.">
+        </div>
+        <div class="form-group optional-field" id="company-markets-group">
+            <label for="company-markets">Key Markets:</label>
+            <textarea id="company-markets" name="key_markets" placeholder="Primary market segments"></textarea>
+        </div>
+    </div>
+    
+    <!-- Leadership & Team -->
+    <div class="form-section">
+        <h2>Leadership & Team</h2>
+        <div class="field-checkboxes">
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-founders')">
+                Founders
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-leadership')">
+                Leadership Team
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-board')">
+                Board Members
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-team-composition')">
+                Team Composition
+            </label>
+        </div>
+        
+        <div class="form-group optional-field" id="company-founders-group">
+            <label for="company-founders">Founders:</label>
+            <textarea id="company-founders" name="founders" placeholder="Company founders"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-leadership-group">
+            <label for="company-leadership">Leadership Team:</label>
+            <textarea id="company-leadership" name="leadership_team" placeholder="Key executives"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-board-group">
+            <label for="company-board">Board Members:</label>
+            <textarea id="company-board" name="board_members" placeholder="Board of directors"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-team-composition-group">
+            <label for="company-team-composition">Team Composition:</label>
+            <textarea id="company-team-composition" name="team_composition" placeholder="Team structure and composition"></textarea>
+        </div>
+    </div>
+    
+    <!-- Culture & Brand -->
+    <div class="form-section">
+        <h2>Culture & Brand</h2>
+        <div class="field-checkboxes">
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-culture')">
+                Work Culture
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-dei')">
+                DEI Statement
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-sustainability')">
+                Sustainability
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-awards')">
+                Awards
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-milestones')">
+                Milestones
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-media')">
+                Media Mentions
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-success-stories')">
+                Success Stories
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-differentiators')">
+                Differentiators
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-brand-voice')">
+                Brand Voice
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-employer-brand')">
+                Employer Brand
+            </label>
+        </div>
+        
+        <div class="form-group optional-field" id="company-culture-group">
+            <label for="company-culture">Work Culture:</label>
+            <textarea id="company-culture" name="work_culture" placeholder="Company culture and values"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-dei-group">
+            <label for="company-dei">DEI Statement:</label>
+            <textarea id="company-dei" name="dei_statement" placeholder="Diversity, equity, and inclusion statement"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-sustainability-group">
+            <label for="company-sustainability">Sustainability Initiatives:</label>
+            <textarea id="company-sustainability" name="sustainability_initiatives" placeholder="Environmental and social responsibility efforts"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-awards-group">
+            <label for="company-awards">Awards:</label>
+            <textarea id="company-awards" name="awards" placeholder="Notable company awards"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-milestones-group">
+            <label for="company-milestones">Milestones:</label>
+            <textarea id="company-milestones" name="milestones" placeholder="Key company milestones"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-media-group">
+            <label for="company-media">Media Mentions:</label>
+            <textarea id="company-media" name="media_mentions" placeholder="Noteworthy press coverage"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-success-stories-group">
+            <label for="company-success-stories">Success Stories:</label>
+            <textarea id="company-success-stories" name="success_stories" placeholder="Case studies or success stories"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-differentiators-group">
+            <label for="company-differentiators">Unique Differentiators:</label>
+            <textarea id="company-differentiators" name="unique_differentiators" placeholder="What sets your company apart"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-brand-voice-group">
+            <label for="company-brand-voice">Brand Voice:</label>
+            <textarea id="company-brand-voice" name="brand_voice" placeholder="Company tone and messaging"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-employer-brand-group">
+            <label for="company-employer-brand">Employer Brand Sentiment:</label>
+            <textarea id="company-employer-brand" name="employer_brand_sentiment" placeholder="Employee perception of company"></textarea>
+        </div>
+    </div>
+    
+    <!-- Hiring & Operations -->
+    <div class="form-section">
+        <h2>Hiring & Operations</h2>
+        <div class="field-checkboxes">
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-hiring-volumes')">
+                Hiring Volumes
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-languages')">
+                Company Languages
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-workplace')">
+                Workplace Model
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-hiring-regions')">
+                Hiring Regions
+            </label>
+        </div>
+        
+        <div class="form-group optional-field" id="company-hiring-volumes-group">
+            <label for="company-hiring-volumes">Hiring Volumes:</label>
+            <input type="text" id="company-hiring-volumes" name="hiring_volumes" placeholder="Annual hiring targets">
+        </div>
+        <div class="form-group optional-field" id="company-languages-group">
+            <label for="company-languages">Company Languages:</label>
+            <input type="text" id="company-languages" name="company_languages" placeholder="Languages used in business">
+        </div>
+        <div class="form-group optional-field" id="company-workplace-group">
+            <label for="company-workplace">Workplace Model:</label>
+            <input type="text" id="company-workplace" name="workplace_model" placeholder="Remote, hybrid, on-site, etc.">
+        </div>
+        <div class="form-group optional-field" id="company-hiring-regions-group">
+            <label for="company-hiring-regions">Hiring Regions:</label>
+            <textarea id="company-hiring-regions" name="hiring_regions" placeholder="Geographic areas for hiring"></textarea>
+        </div>
+    </div>
+    
+    <!-- Web Presence & Links -->
+    <div class="form-section">
+        <h2>Web Presence & Links</h2>
+        <div class="field-checkboxes">
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-logo-url')">
+                Logo URL
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-website')">
+                Website URL
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-careers')">
+                Careers Page
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-social')">
+                Social Media
+            </label>
+            <label class="field-checkbox">
+                <input type="checkbox" checked onchange="toggleField('company-reviews')">
+                Review Links
+            </label>
+        </div>
+        
+        <div class="form-group optional-field" id="company-logo-url-group">
+            <label for="company-logo-url">Logo URL:</label>
+            <input type="url" id="company-logo-url" name="logo_url" placeholder="URL to company logo">
+        </div>
+        <div class="form-group optional-field" id="company-website-group">
+            <label for="company-website">Website URL:</label>
+            <input type="url" id="company-website" name="website_url" placeholder="Company website">
+        </div>
+        <div class="form-group optional-field" id="company-careers-group">
+            <label for="company-careers">Careers Page URL:</label>
+            <input type="url" id="company-careers" name="careers_page_url" placeholder="Company careers page">
+        </div>
+        <div class="form-group optional-field" id="company-social-group">
+            <label for="company-social">Social Media Links:</label>
+            <textarea id="company-social" name="social_media_links" placeholder="LinkedIn, Twitter, etc. (one per line)"></textarea>
+        </div>
+        <div class="form-group optional-field" id="company-reviews-group">
+            <label for="company-reviews">Employer Review Links:</label>
+            <textarea id="company-reviews" name="employer_review_links" placeholder="Glassdoor, Indeed, etc. (one per line)"></textarea>
+        </div>
+    </div>
+</form>
+
+<script>
+// Toggle field visibility
+function toggleField(fieldId) {
+    const group = document.getElementById(fieldId + '-group');
+    if (group) {
+        group.style.display = group.style.display === 'none' ? 'block' : 'none';
+        updateFormProgress('company-form');
+    }
+}
+
+// Toggle compact form view
+function toggleCompactForm(formId) {
+    const form = document.getElementById(formId);
+    if (form) {
+        form.classList.toggle('company-form-compact');
+        updateFormProgress(formId);
+    }
+}
+
+// Update form progress bar
+function updateFormProgress(formId) {
+    const form = document.getElementById(formId);
+    const progressBar = document.getElementById(formId + '-progress');
+    
+    if (form && progressBar) {
+        const totalFields = form.querySelectorAll('.form-group').length;
+        const filledFields = form.querySelectorAll('.form-group input:not([value=""]), .form-group textarea:not(:empty)').length;
+        
+        const progress = Math.round((filledFields / totalFields) * 100);
+        progressBar.style.width = progress + '%';
+    }
+}
+
+// Initialize form state
+document.addEventListener('DOMContentLoaded', function() {
+    updateFormProgress('company-form');
+});
+</script> 
