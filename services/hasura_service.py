@@ -284,10 +284,16 @@ def get_company_jobs(company_id: int):
     except (KeyError, IndexError) as e:
         raise Exception("Error parsing response from Hasura") from e
 
-# Helper function to determine GraphQL type from Python type
 def get_gql_type(key, value):
-    if key == "company_id" or key == "id" or key == "year_founded":
-        return "Int!"
-    if isinstance(value, bool):
-        return "Boolean!"
-    return "String!"
+    """
+    Get the GraphQL type for a given key and value.
+    Used for building dynamic GraphQL queries.
+    """
+    if isinstance(value, int):
+        return "Int"
+    elif isinstance(value, float):
+        return "Float"
+    elif isinstance(value, bool):
+        return "Boolean"
+    else:
+        return "String"  # Default to String for all other types

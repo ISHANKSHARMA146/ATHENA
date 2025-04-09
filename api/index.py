@@ -1,7 +1,18 @@
+# api/index.py
+# This file serves as the entry point for Vercel serverless functions
+
+# Import the FastAPI app from main.py
+import sys
+import os
+
+# Add the parent directory to the path so we can import from main.py
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from main import app  # Import the FastAPI application
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
-import os
 import pathlib
 
 app = FastAPI()
@@ -152,4 +163,6 @@ from routes import auth, company, jd
 
 app.include_router(auth.router, prefix="/auth")
 app.include_router(company.router, prefix="/company")
-app.include_router(jd.router, prefix="/jd") 
+app.include_router(jd.router, prefix="/jd")
+
+# Vercel expects a callable named "app", which we've imported from main.py 

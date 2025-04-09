@@ -28,8 +28,22 @@
       "dest": "/templates/$1"
     },
     {
+      "src": "/components/(.*)",
+      "dest": "/templates/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/api/index.py"
     }
-  ]
+  ],
+  "env": {
+    "PYTHONPATH": ".",
+    "ENVIRONMENT": "production"
+  },
+  "functions": {
+    "api/index.py": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
 } 
