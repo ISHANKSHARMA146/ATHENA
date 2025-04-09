@@ -3,7 +3,11 @@
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxDuration": 10,
+        "memory": 1024
+      }
     },
     {
       "src": "static/**",
@@ -39,11 +43,5 @@
   "env": {
     "PYTHONPATH": ".",
     "ENVIRONMENT": "production"
-  },
-  "functions": {
-    "api/index.py": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
   }
 } 
